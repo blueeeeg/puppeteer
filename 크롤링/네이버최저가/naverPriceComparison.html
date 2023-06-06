@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="./네이버최저가/naverPriceComparison.css"
+    />
+    <title>리뷰 크롤링</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="product_button" onclick="_getNaverPriceComparisonProduct()">
+        상품 불러오기
+      </div>
+      <script>
+        const _getNaverPriceComparisonProduct = () => {
+          fetch("/naverPriceComparisonList", {
+            method: "GET",
+          })
+            .then(async (response) => {
+              const data = await response.json();
+
+              const container = document.getElementById("product_list");
+              data.forEach((item, index) => {
+                const nameDiv = document.createElement("div");
+                nameDiv.className = `product_item`;
+                nameDiv.textContent = item.name;
+                nameDiv.onclick = function () {
+                  const selectItemUrl =
+                    document.getElementById("select_item_url");
+                  selectItemUrl.value = item.url;
+                  const selectItemName =
+                    document.getElementById("select_item_name");
+                  selectItemName.value = item.name;
+
+                  const selectItem = document.getElementById("select_item");
+                  selectItem.textContent = item.name;
+
+                  for (let i = 0; i < data.length; i += 1) {
+                    const element = document.getElementById(i);
+
+                    if (i === index) element.className = "product_item click";
+                    else element.className = "product_item non_click";
+                  }
+                };
+                container.appendChild(nameDiv);
+              });
+            })
+            .then((data) => console.log("data : ", data))
+            .catch((error) => console.error("error : ", error));
+        };
+      </script>
+      <div class="product_button" onclick="_renewNaverPriceComparisonProduct()">
+        상품 갱신하기
+      </div>
+      <script>
+        const _renewNaverPriceComparisonProduct = () => {
+          fetch("/naverPriceComparisonList", {
+            method: "POST",
+          })
+            .then(async (response) => console.log("response : ", response))
+            .then((data) => console.log("data : ", data))
+            .catch((error) => console.error("error : ", error));
+        };
+      </script>
+    </div>
+    <form action="/naverPriceComparisonCrawling" method="POST">
+      <input id="select_item_url" name="url" style="display: none" />
+      <input id="select_item_name" name="name" style="display: none" />
+      <div class="select_item_wrapper">
+        <span>선택한 상품 :</span>
+        <span id="select_item"></span>
+      </div>
+      <input
+        type="text"
+        class="input"
+        name="st_date"
+        placeholder="시작일 yymmdd"
+      />
+      <input
+        type="text"
+        class="input"
+        name="end_date"
+        placeholder="종료일 yymmdd"
+      />
+      <input
+        id="submit"
+        type="submit"
+        class="crawling_button"
+        value="크롤링 시작"
+      />
+      <script>
+        const submit = document.getElementById("submit");
+
+        const decideToCrawling = (event) => {
+          const name = document.getElementById("select_item");
+
+          if (!name.textContent) {
+            event.preventDefault();
+            alert("아이템을 선택해주세요");
+          } else name.textContent = "";
+        };
+
+        submit.addEventListener("click", (event) => decideToCrawling(event));
+      </script>
+    </form>
+    <div id="product_list" class="product_list"></div>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="./crawling.css" />
+    <title>리뷰 크롤링</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="product_button" onclick="_goPage('public')">공식몰</div>
+      <div class="product_button" onclick="_goPage('naver')">네이버</div>
+      <div class="product_button" onclick="_goPage('oliveyoung')">올리브영</div>
+      <div class="product_button" onclick="_goPage('coopang')">쿠팡</div>
+      <div class="product_button" onclick="_goPage('naverPriceComparison')">
+        네이버 최저가
+      </div>
+      <script>
+        const _goPage = (page) => {
+          window.location.href = `/${page}`;
+        };
+      </script>
+    </div>
+  </body>
+</html>
