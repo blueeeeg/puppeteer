@@ -28,7 +28,7 @@ const NaverExcel = (name, reviewData) => {
   const workbook = new Excel.Workbook();
 
   workbook.xlsx
-    .readFile(`./네이버/${name}.xlsx`)
+    .readFile(`./네이버/리뷰/${name}.xlsx`)
     .then((res) => {
       const worksheet = res.getWorksheet("리뷰");
 
