@@ -28,7 +28,7 @@ const OliveyoungExcel = (name, reviewData) => {
   const workbook = new Excel.Workbook();
 
   workbook.xlsx
-    .readFile(`./올리브영/${name}.xlsx`)
+    .readFile(`./올리브영/리뷰/${name}.xlsx`)
     .then((res) => {
       const worksheet = res.getWorksheet("리뷰");
 
