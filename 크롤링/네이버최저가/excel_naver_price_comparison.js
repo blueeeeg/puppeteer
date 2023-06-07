@@ -24,7 +24,7 @@ const NaverPriceComparisonExcel = (name, priceData) => {
   const workbook = new Excel.Workbook();
 
   workbook.xlsx
-    .readFile(`./네이버최저가/${name}.xlsx`)
+    .readFile(`./네이버최저가/최저가/${name}.xlsx`)
     .then((res) => {
       const worksheet = res.getWorksheet("최저가");
 
