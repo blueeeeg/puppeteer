@@ -5,7 +5,7 @@ const valueChecker = (value) => {
 
 // 엑셀 파일 생성
 const makeFile = async (workbook, name) => {
-  await workbook.xlsx.writeFile(`./쿠팡/${name}.xlsx`);
+  await workbook.xlsx.writeFile(`./쿠팡/리뷰/${name}.xlsx`);
 };
 
 const fillData = (worksheet, reviewData) => {
