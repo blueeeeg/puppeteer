@@ -1,5 +1,5 @@
 const valueChecker = (value) => {
-  if (value) return value;
+  if (value) return value.trim();
   return "";
 };
 
