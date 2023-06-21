@@ -14,10 +14,9 @@ const fillData = (worksheet, reviewData) => {
       valueChecker(reviewData[i].id),
       valueChecker(reviewData[i].date),
       valueChecker(reviewData[i].score),
-      valueChecker(reviewData[i].usagePeriod),
+      valueChecker(reviewData[i].age),
       valueChecker(reviewData[i].skinType),
       valueChecker(reviewData[i].skinWorry),
-      valueChecker(reviewData[i].skinStimulus),
       valueChecker(reviewData[i].review),
     ]);
   }
@@ -43,8 +42,8 @@ const PublicExcel = (name, reviewData) => {
         "이름(아이디)",
         "일자",
         "별점",
-        "피부타입",
         "연령대",
+        "피부타입",
         "피부고민",
         "리뷰",
       ]);
