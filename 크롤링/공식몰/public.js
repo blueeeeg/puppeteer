@@ -48,9 +48,9 @@ const getReviews = async (frame, id_list, st_date, end_date) => {
       const score = await getTextFromSelector(frame, selector_score);
       const date = await getTextFromSelector(frame, selector_date);
       const reviewer = await getTextFromSelector(frame, selector_reviewer);
-      const age = await getTextFromSelector(frame, selector_age);
-      const skin_type = await getTextFromSelector(frame, selector_skin_type);
-      const skin_worry = await getTextFromSelector(frame, selector_skin_worry);
+      let age = await getTextFromSelector(frame, selector_age);
+      let skin_type = await getTextFromSelector(frame, selector_skin_type);
+      let skin_worry = await getTextFromSelector(frame, selector_skin_worry);
       const review = await getTextFromSelector(frame, selector_review);
 
       if (!score) {
@@ -64,6 +64,10 @@ const getReviews = async (frame, id_list, st_date, end_date) => {
       if (end_date && lateDateCheckerThanEndDate(date, end_date)) {
         continue;
       }
+
+      if (age) age = age.replace("연령대", "").trim();
+      if (skin_type) skin_type = skin_type.replace("피부타입", "").trim();
+      if (skin_worry) skin_worry = skin_worry.replace("피부고민", "").trim();
 
       reviews.push({
         id: reviewer,
