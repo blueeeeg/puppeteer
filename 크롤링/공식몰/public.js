@@ -17,17 +17,17 @@ const convertDateFormat = (date) => {
   return `${year.slice(2)}${month}${day}`;
 };
 
-const betweenDateChecker = (date, st_date, end_date) => {
+const earlyDateCheckerThanStDate = (date, st_date) => {
   const convertedDate = convertDateFormat(date);
 
-  if (st_date <= convertedDate && convertedDate <= end_date) return true;
+  if (convertedDate < st_date) return true;
   else return false;
 };
 
-const earlyDateCheckerThanEndDate = (date, end_date) => {
+const lateDateCheckerThanEndDate = (date, end_date) => {
   const convertedDate = convertDateFormat(date);
 
-  if (convertedDate < end_date) return true;
+  if (end_date < convertedDate) return true;
   else return false;
 };
 
@@ -57,12 +57,13 @@ const getReviews = async (frame, id_list, st_date, end_date) => {
         isContinue = false;
         break;
       }
-      if (end_date && earlyDateCheckerThanEndDate(date, end_date)) {
+      if (st_date && earlyDateCheckerThanStDate(date, st_date)) {
         isContinue = false;
         break;
       }
-      if (st_date && end_date && !betweenDateChecker(date, st_date, end_date))
+      if (end_date && lateDateCheckerThanEndDate(date, end_date)) {
         continue;
+      }
 
       reviews.push({
         id: reviewer,
