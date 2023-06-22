@@ -18,6 +18,7 @@ const fillData = (worksheet, reviewData) => {
       valueChecker(reviewData[i].troubleCare),
       valueChecker(reviewData[i].skinStimulus),
       valueChecker(reviewData[i].moisture),
+      valueChecker(reviewData[i].tester),
       valueChecker(reviewData[i].review),
     ]);
   }
@@ -59,6 +60,7 @@ const NaverExcel = (name, reviewData) => {
         "트러블케어",
         "피부자극",
         "촉촉함",
+        "한달사용기",
         "리뷰",
       ]);
 

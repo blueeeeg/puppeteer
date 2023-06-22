@@ -89,7 +89,7 @@ const getReviews = async (page, st_date, end_date) => {
         page,
         selector_usage_review
       );
-      const review = await getTextFromSelector(page, selector_review);
+      let review = await getTextFromSelector(page, selector_review);
       const revised_usage_review = usageDivider(usage_review);
 
       if (!score) {
@@ -104,6 +104,9 @@ const getReviews = async (page, st_date, end_date) => {
         continue;
       }
 
+      const tester = review.includes("한달사용기") ? "한달사용기" : "";
+      review = review.replace("한달사용기", "");
+
       reviews.push({
         id: reviewer,
         date: date,
@@ -112,6 +115,7 @@ const getReviews = async (page, st_date, end_date) => {
         troubleCare: revised_usage_review[1],
         skinStimulus: revised_usage_review[2],
         moisture: revised_usage_review[3],
+        tester,
         review: review,
       });
 
