@@ -37,9 +37,9 @@ const earlyDateCheckerThanEndDate = (date, end_date) => {
   else return false;
 };
 
-let reviews = [];
 const getReviews = async (page, st_date, end_date) => {
   let isContinue = true;
+  let reviews = [];
 
   for (let i = 0; i < 10; i += 1) {
     const selector_score = `#gdasList > li:nth-child(${
@@ -121,7 +121,7 @@ const getReviews = async (page, st_date, end_date) => {
     }
   }
 
-  return { isContinue };
+  return { isContinue, reviews };
 };
 
 const OliveyoungCrawling = async (url, name, st_date, end_date) => {
@@ -147,8 +147,10 @@ const OliveyoungCrawling = async (url, name, st_date, end_date) => {
 
     let pageNbr = 1;
     let currentPageNbr = 1;
+    let filledReviews = [];
     while (true) {
-      const { isContinue } = await getReviews(page, st_date, end_date);
+      const { isContinue, reviews } = await getReviews(page, st_date, end_date);
+      filledReviews = [...filledReviews, ...reviews];
 
       if (isContinue) {
         let selector_next_page;
@@ -184,7 +186,7 @@ const OliveyoungCrawling = async (url, name, st_date, end_date) => {
 
     browser.close();
 
-    OliveyoungExcel.OliveyoungExcel(name, reviews);
+    OliveyoungExcel.OliveyoungExcel(name, filledReviews);
   } catch (e) {
     console.log(e);
   }

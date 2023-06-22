@@ -41,9 +41,9 @@ const earlyDateCheckerThanEndDate = (date, end_date) => {
   else return false;
 };
 
-let reviews = [];
 const getReviews = async (page, st_date, end_date) => {
   let isContinue = true;
+  let reviews = [];
 
   for (let i = 3; i < 8; i += 1) {
     const selector_score = `#btfTab > ul.tab-contents > li.product-review.tab-contents__content > div > div.sdp-review__article.js_reviewArticleContainer > section.js_reviewArticleListContainer > article:nth-child(${i}) > div.sdp-review__article__list__info > div.sdp-review__article__list__info__product-info > div.sdp-review__article__list__info__product-info__star-gray > div`;
@@ -111,7 +111,7 @@ const getReviews = async (page, st_date, end_date) => {
     }
   }
 
-  return { isContinue };
+  return { isContinue, reviews };
 };
 
 const CoopangCrawler = async (url, name, st_date, end_date) => {
@@ -153,8 +153,10 @@ const CoopangCrawler = async (url, name, st_date, end_date) => {
 
     wait(1);
     let pageNbr = 3;
+    let filledReviews = [];
     while (true) {
-      const { isContinue } = await getReviews(page, st_date, end_date);
+      const { isContinue, reviews } = await getReviews(page, st_date, end_date);
+      filledReviews = [...filledReviews, ...reviews];
 
       if (isContinue) {
         let selector_next_page;
@@ -184,7 +186,7 @@ const CoopangCrawler = async (url, name, st_date, end_date) => {
 
     browser.close();
 
-    CoopangExcel.CoopangExcel(name, reviews);
+    CoopangExcel.CoopangExcel(name, filledReviews);
   } catch (e) {
     console.log(e);
   }

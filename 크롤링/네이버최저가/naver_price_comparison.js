@@ -50,9 +50,9 @@ const getLinkFromSelector = async (page, selector) => {
   }
 };
 
-let prices = [];
 const getMinimumPrices = async (page) => {
   let isContinue = true;
+  let prices = [];
 
   for (let i = 0; i < 20; i += 1) {
     const selector_shop_text = `#section_price > div.productList_seller_wrap__FZtUS > ul > li:nth-child(${
@@ -102,7 +102,7 @@ const getMinimumPrices = async (page) => {
     }
   }
 
-  return { isContinue };
+  return { isContinue, prices };
 };
 
 const NaverPriceComparisonCrawling = async (url, name, st_date, end_date) => {
@@ -128,8 +128,10 @@ const NaverPriceComparisonCrawling = async (url, name, st_date, end_date) => {
 
     // 최저가 출력
     let pageNbr = 1;
+    let filledPrices = [];
     while (true) {
-      const { isContinue } = await getMinimumPrices(page);
+      const { isContinue, prices } = await getMinimumPrices(page);
+      filledPrices = [...filledPrices, ...prices];
 
       if (isContinue) {
         const selector_next_page = `#section_price > div.productList_seller_wrap__FZtUS > div.pagination_pagination__JW7zT > a:nth-child(${
@@ -150,7 +152,7 @@ const NaverPriceComparisonCrawling = async (url, name, st_date, end_date) => {
 
     browser.close();
 
-    NaverPriceComparisonExcel.NaverPriceComparisonExcel(name, prices);
+    NaverPriceComparisonExcel.NaverPriceComparisonExcel(name, filledPrices);
   } catch (e) {
     console.log(e);
   }

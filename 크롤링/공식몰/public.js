@@ -31,9 +31,9 @@ const earlyDateCheckerThanEndDate = (date, end_date) => {
   else return false;
 };
 
-let reviews = [];
 const getReviews = async (frame, id_list, st_date, end_date) => {
   let isContinue = true;
+  let reviews = [];
 
   for (let i = 0; i < id_list.length; i += 1) {
     const selector_score = `#${id_list[i]} > div.review_list_v2__review_lcontent > div > div.review_list_v2__score_section > div.review_list_v2__score_container > div.review_list_v2__score_text`;
@@ -90,7 +90,7 @@ const getReviews = async (frame, id_list, st_date, end_date) => {
     }
   }
 
-  return { isContinue };
+  return { isContinue, reviews };
 };
 
 const PublicCrawler = async (url, name, st_date, end_date) => {
@@ -103,6 +103,7 @@ const PublicCrawler = async (url, name, st_date, end_date) => {
 
     // 리뷰 크롤링
     let pageNbr = 1;
+    let filledReviews = [];
     while (true) {
       const revisedUrl = `${url}?crema-product-reviews-1-page=${pageNbr}`;
 
@@ -127,12 +128,13 @@ const PublicCrawler = async (url, name, st_date, end_date) => {
       }
       if (id_list.length === 0) break;
 
-      const { isContinue } = await getReviews(
+      const { isContinue, reviews } = await getReviews(
         frame,
         id_list,
         st_date,
         end_date
       );
+      filledReviews = [...filledReviews, ...reviews];
 
       if (isContinue) pageNbr += 1;
       else break;
@@ -140,7 +142,7 @@ const PublicCrawler = async (url, name, st_date, end_date) => {
 
     browser.close();
 
-    PublicExcel.PublicExcel(name, reviews);
+    PublicExcel.PublicExcel(name, filledReviews);
   } catch (e) {
     console.log(e);
   }

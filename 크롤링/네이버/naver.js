@@ -61,9 +61,9 @@ const usageDivider = (str) => {
   return usageReviews;
 };
 
-let reviews = [];
 const getReviews = async (page, st_date, end_date) => {
   let isContinue = true;
+  let reviews = [];
   for (let i = 0; i < 20; i += 1) {
     const selector_score = `#REVIEW > div > div._180GG7_7yx > div.cv6id6JEkg > ul > li:nth-child(${
       i + 1
@@ -128,7 +128,7 @@ const getReviews = async (page, st_date, end_date) => {
     }
   }
 
-  return { isContinue };
+  return { isContinue, reviews };
 };
 
 const NaverCrawling = async (url, name, st_date, end_date) => {
@@ -166,8 +166,11 @@ const NaverCrawling = async (url, name, st_date, end_date) => {
     wait(1);
 
     let pageNbr = 2;
+    let filledReviews = [];
     while (true) {
-      const { isContinue } = await getReviews(page, st_date, end_date);
+      const { isContinue, reviews } = await getReviews(page, st_date, end_date);
+      filledReviews = [...filledReviews, ...reviews];
+
       if (isContinue) {
         let selector_next_page;
         if (pageNbr === 11) {
@@ -194,7 +197,7 @@ const NaverCrawling = async (url, name, st_date, end_date) => {
     }
     browser.close();
 
-    NaverExcel.NaverExcel(name, reviews);
+    NaverExcel.NaverExcel(name, filledReviews);
   } catch (e) {
     console.log(e);
   }
