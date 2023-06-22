@@ -21,7 +21,8 @@
               const container = document.getElementById("product_list");
               data.forEach((item, index) => {
                 const nameDiv = document.createElement("div");
-                nameDiv.className = `product_item`;
+                nameDiv.id = index;
+                nameDiv.className = `product_item non_click`;
                 nameDiv.textContent = item.name;
                 nameDiv.onclick = function () {
                   const selectItemUrl =
