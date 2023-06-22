@@ -6,7 +6,7 @@ const makeFile = async (workbook) => {
 const makePublicProductList = (productData) => {
   const Excel = require("exceljs");
   const workbook = new Excel.Workbook();
-  console.log(12312321);
+
   const worksheet = workbook.addWorksheet("상품리스트");
   for (let i = 0; i < productData.length; i += 1) {
     worksheet.addRow([productData[i].name, productData[i].url]);

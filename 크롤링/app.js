@@ -60,7 +60,7 @@ app.get("/publicList", async (req, res) => {
 
 // 공식몰 상품 갱신하기
 app.post("/publicList", async (req, res) => {
-  console.log("쿠팡 상품 리스트 갱신하기");
+  console.log("공식몰 상품 리스트 갱신하기");
   const publicCrawler = require("./공식몰/public_product.js");
 
   await publicCrawler.PublicProductCrawling();
