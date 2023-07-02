@@ -67,46 +67,56 @@
         };
       </script>
     </div>
-    <form action="/naverPriceComparisonCrawling" method="POST">
-      <input id="select_item_url" name="url" style="display: none" />
-      <input id="select_item_name" name="name" style="display: none" />
-      <div class="select_item_wrapper">
-        <span>선택한 상품 :</span>
-        <span id="select_item"></span>
-      </div>
-      <input
-        type="text"
-        class="input"
-        name="st_date"
-        placeholder="시작일 yymmdd"
-      />
-      <input
-        type="text"
-        class="input"
-        name="end_date"
-        placeholder="종료일 yymmdd"
-      />
-      <input
-        id="submit"
-        type="submit"
-        class="crawling_button"
-        value="크롤링 시작"
-      />
-      <script>
-        const submit = document.getElementById("submit");
+    <div class="input_wrapper">
+      <form action="/naverPriceComparisonCrawling" method="POST">
+        <input id="select_item_url" name="url" style="display: none" />
+        <input id="select_item_name" name="name" style="display: none" />
+        <div class="select_item_wrapper">
+          <span>선택한 상품 :</span>
+          <span id="select_item"></span>
+        </div>
+        <input
+          type="text"
+          class="input"
+          name="st_date"
+          placeholder="시작일 yymmdd"
+        />
+        <input
+          type="text"
+          class="input"
+          name="end_date"
+          placeholder="종료일 yymmdd"
+        />
+        <input
+          id="submit"
+          type="submit"
+          class="crawling_button"
+          value="크롤링 시작"
+        />
+        <script>
+          const submit = document.getElementById("submit");
 
-        const decideToCrawling = (event) => {
-          const name = document.getElementById("select_item");
+          const decideToCrawling = (event) => {
+            const name = document.getElementById("select_item");
 
-          if (!name.textContent) {
-            event.preventDefault();
-            alert("아이템을 선택해주세요");
-          } else name.textContent = "";
-        };
+            if (!name.textContent) {
+              event.preventDefault();
+              alert("아이템을 선택해주세요");
+            } else name.textContent = "";
+          };
 
-        submit.addEventListener("click", (event) => decideToCrawling(event));
-      </script>
-    </form>
+          submit.addEventListener("click", (event) => decideToCrawling(event));
+        </script>
+      </form>
+      <form action="/naverPriceComparisonCrawlingAll" method="POST">
+        <input
+          id="crawling_all"
+          type="submit"
+          class="crawling_all_button"
+          value="모든 상품을 크롤링"
+        />
+      </form>
+    </div>
     <div id="product_list" class="product_list"></div>
   </body>
 </html>

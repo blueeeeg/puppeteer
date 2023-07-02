@@ -20,19 +20,24 @@ const getPublicProductList = async () => {
   const workbook = new Excel.Workbook();
 
   const product_list = [];
-  await workbook.xlsx.readFile("./공식몰/상품리스트.xlsx").then((res) => {
-    const worksheet = res.getWorksheet("상품리스트");
+  await workbook.xlsx
+    .readFile("./공식몰/상품리스트.xlsx")
+    .then((res) => {
+      const worksheet = res.getWorksheet("상품리스트");
 
-    let product_nbr = 1;
-    while (true) {
-      const [_, name, url] = worksheet.getRow(product_nbr).values;
+      let product_nbr = 1;
+      while (true) {
+        const [_, name, url] = worksheet.getRow(product_nbr).values;
 
-      if (name) {
-        product_list.push({ name, url });
-        product_nbr += 1;
-      } else break;
-    }
-  });
+        if (name) {
+          product_list.push({ name, url });
+          product_nbr += 1;
+        } else break;
+      }
+    })
+    .catch((err) => {
+      console.log("error occurs when read 상품리스트", err);
+    });
 
   return product_list;
 };

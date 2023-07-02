@@ -41,7 +41,7 @@
 
 .input_wrapper {
   display: flex;
-  align-items: center;
+  align-items: end;
   gap: 20px;
 }
 
@@ -56,5 +56,12 @@
   text-align: center;
   width: 100px;
   height: 34px;
-  background-color: "#ddddddd";
+  background-color: #dddddd;
+}
+
+.crawling_all_button {
+  text-align: center;
+  width: 150px;
+  height: 34px;
+  background-color: #dddddd;
 }

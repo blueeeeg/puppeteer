@@ -189,6 +189,15 @@ app.post("/naverPriceComparisonCrawling", async (req, res) => {
   res.send({ message: "finish to crawling" });
 });
 
+// 전체 상품 크롤링
+app.post("/naverPriceComparisonCrawlingAll", async (req, res) => {
+  const naverPriceComparisonCrawler = require("./네이버최저가/naver_price_comparison.js");
+
+  await naverPriceComparisonCrawler.NaverPriceComparisonCrawlingAll();
+
+  res.send({ message: "finish to crawling all" });
+});
+
 // 네이버최저가 상품 리스트 받아오기
 app.get("/naverPriceComparisonList", async (req, res) => {
   console.log("네이버최저가 상품 리스트 받아오기");
