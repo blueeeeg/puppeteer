@@ -98,7 +98,7 @@ const getReviews = async (page, st_date, end_date) => {
       reviews.push({
         id: reviewer,
         date: date,
-        score: score,
+        score: score.split(" ")[1][0],
         usagePeriod: usage_period,
         skinType: skin_type,
         skinWorry: skin_worry,

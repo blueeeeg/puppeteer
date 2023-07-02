@@ -31,6 +31,14 @@ const lateDateCheckerThanEndDate = (date, end_date) => {
   else return false;
 };
 
+const scoreTextToNbr = (str) => {
+  if (str === "아주 좋아요") return "5";
+  else if (str === "맘에 들어요") return "4";
+  else if (str === "보통이에요") return "3";
+  else if (str === "그냥 그래요") return "2";
+  return "1";
+};
+
 const getReviews = async (frame, id_list, st_date, end_date) => {
   let isContinue = true;
   let reviews = [];
@@ -72,7 +80,7 @@ const getReviews = async (frame, id_list, st_date, end_date) => {
       reviews.push({
         id: reviewer,
         date,
-        score,
+        score: scoreTextToNbr(score),
         age,
         skinType: skin_type,
         skinWorry: skin_worry,
