@@ -76,13 +76,14 @@ const NaverPriceComparisonProductCrawling = async () => {
     });
 
     // 상품 리스트 뽑아오기
-    let product_count = 1;
+    const selector_next = `#content > div.style_content__xWg5l > div.pagination_pagination__fsf34 > div > a`;
+    let product_count = 0;
     let product_list = [];
 
     while (true) {
-      const { name, url, price } = await getInfo(page, product_count);
+      const { name, url } = await getInfo(page, product_count);
 
-      if (!name || !price) break;
+      if (!name) break;
 
       wait(1);
       await page.evaluate(() => {
@@ -92,6 +93,11 @@ const NaverPriceComparisonProductCrawling = async () => {
       console.log("product info : ", name, url);
       product_count += 1;
       product_list.push({ name, url });
+
+      if (product_count === 40) {
+        await page.click(selector_next);
+        product_count = 0;
+      }
     }
 
     browser.close();
