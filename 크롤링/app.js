@@ -191,9 +191,17 @@ app.post("/naverPriceComparisonCrawling", async (req, res) => {
 
 // 전체 상품 크롤링
 app.post("/naverPriceComparisonCrawlingAll", async (req, res) => {
+  const naverPriceComparisonProductCrawler = require("./네이버최저가/excel_naver_price_comparison_product.js");
   const naverPriceComparisonCrawler = require("./네이버최저가/naver_price_comparison.js");
 
-  await naverPriceComparisonCrawler.NaverPriceComparisonCrawlingAll();
+  const productList =
+    await naverPriceComparisonProductCrawler.getNaverPriceComparisonProductList();
+  for (let i = 0; i < productList.length; i += 1) {
+    await naverPriceComparisonCrawler.NaverPriceComparisonCrawling(
+      productList[i].url,
+      productList[i].name
+    );
+  }
 
   res.send({ message: "finish to crawling all" });
 });
