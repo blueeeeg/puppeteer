@@ -33,6 +33,53 @@ app.use(express.static(__dirname));
 // req body를 보려면 이걸 넣어야되네
 app.use(express.urlencoded({ extended: false }));
 
+// 전체 상품 크롤링
+app.post("/crawlingAll", async (req, res) => {
+  // 공식몰 상품 갱신 -> 불러오기 -> 크롤링
+  const publicListCrawler = require("./공식몰/excel_public_product.js");
+  const publicList = await publicListCrawler.getPublicProductList();
+
+  const publicCrawler = require("./공식몰/public.js");
+  for (let i = 0; i < publicList.length; i += 1) {
+    await publicCrawler.PublicCrawler(publicList[i].url, publicList[i].name);
+  }
+
+  // 네이버 상품 갱신 -> 불러오기 -> 크롤링
+  const naverListCrawler = require("./네이버/excel_naver_product.js");
+  const naverList = await naverListCrawler.getNaverProductList();
+
+  const naverCrawler = require("./네이버/naver.js");
+  for (let i = 0; i < naverList.length; i += 1) {
+    await naverCrawler.NaverCrawling(naverList[i].url, naverList[i].name);
+  }
+
+  // 올리브영 상품 갱신 -> 불러오기 -> 크롤링
+  const oliveyoungListCrawler = require("./올리브영/excel_oliveyoung_product.js");
+  const oliveyoungList = await oliveyoungListCrawler.getOliveyoungProductList();
+
+  const oliveyoungCrawler = require("./올리브영/oliveyoung.js");
+  for (let i = 0; i < oliveyoungList.length; i += 1) {
+    await oliveyoungCrawler.OliveyoungCrawling(
+      oliveyoungList[i].url,
+      oliveyoungList[i].name
+    );
+  }
+
+  // 쿠팡 상품 갱신 -> 불러오기 -> 크롤링
+  const coopangListCrawler = require("./쿠팡/excel_coopang_product.js");
+  const coopangList = await coopangListCrawler.getCoopangProductList();
+
+  const coopangCrawler = require("./쿠팡/coopang.js");
+  for (let i = 0; i < coopangList.length; i += 1) {
+    await coopangCrawler.CoopangCrawler(
+      coopangList[i].url,
+      coopangList[i].name
+    );
+  }
+
+  res.send({ message: "finish to crawling all" });
+});
+
 // 공식몰 api
 app.post("/publicCrawling", async (req, res) => {
   const publicCrawler = require("./공식몰/public.js");

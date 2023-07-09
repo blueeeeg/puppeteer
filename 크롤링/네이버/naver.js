@@ -74,6 +74,12 @@ const getReviews = async (page, st_date, end_date) => {
     const selector_date = `#REVIEW > div > div._180GG7_7yx > div.cv6id6JEkg > ul > li:nth-child(${
       i + 1
     }) > div > div > div > div._1XNnRviOK8 > div > div > div._1rZLm75kLm > div._37TlmH3OaI > div._2FmJXrTVEX > span`;
+    const selector_usage_1 = `#REVIEW > div > div._180GG7_7yx > div.cv6id6JEkg > ul > li:nth-child(${
+      i + 1
+    }) > div > div > div > div._1XNnRviOK8 > div > div._1YShY6EQ56 > div._1rZLm75kLm > div._37TlmH3OaI > div._14FigHP3K8 > dl > div._3MFQQMyTyT`;
+    const selector_usage_4 = `#REVIEW > div > div._180GG7_7yx > div.cv6id6JEkg > ul > li:nth-child(${
+      i + 1
+    }) > div > div > div > div._1XNnRviOK8 > div > div._1YShY6EQ56 > div._1rZLm75kLm > div._37TlmH3OaI > div._14FigHP3K8 > dl > div._2lh7oBgBrF._2v4M2P83qi`;
     const selector_usage_review = `#REVIEW > div > div._180GG7_7yx > div.cv6id6JEkg > ul > li:nth-child(${
       i + 1
     }) > div > div > div > div._1XNnRviOK8 > div > div._1YShY6EQ56 > div._1rZLm75kLm > div._37TlmH3OaI > div._14FigHP3K8 > dl`;
@@ -85,6 +91,31 @@ const getReviews = async (page, st_date, end_date) => {
       const score = await getTextFromSelector(page, selector_score);
       const reviewer = await getTextFromSelector(page, selector_reviewer);
       const date = await getTextFromSelector(page, selector_date);
+      const usage_1 = await getTextFromSelector(page, selector_usage_1);
+      const usage_4 = await getTextFromSelector(page, selector_usage_4);
+
+      let selector_usage_2 = ``;
+      let selector_usage_3 = ``;
+
+      if (usage_1) {
+        selector_usage_2 = `#REVIEW > div > div._180GG7_7yx > div.cv6id6JEkg > ul > li:nth-child(${
+          i + 1
+        }) > div > div > div > div._1XNnRviOK8 > div > div._1YShY6EQ56 > div._1rZLm75kLm > div._37TlmH3OaI > div._14FigHP3K8 > dl > div:nth-child(1)`;
+        selector_usage_3 = `#REVIEW > div > div._180GG7_7yx > div.cv6id6JEkg > ul > li:nth-child(${
+          i + 1
+        }) > div > div > div > div._1XNnRviOK8 > div > div._1YShY6EQ56 > div._1rZLm75kLm > div._37TlmH3OaI > div._14FigHP3K8 > dl > div:nth-child(2)`;
+      } else {
+        selector_usage_2 = `#REVIEW > div > div._180GG7_7yx > div.cv6id6JEkg > ul > li:nth-child(${
+          i + 1
+        }) > div > div > div > div._1XNnRviOK8 > div > div._1YShY6EQ56 > div._1rZLm75kLm > div._37TlmH3OaI > div._14FigHP3K8 > dl > div:nth-child(2)`;
+        selector_usage_3 = `#REVIEW > div > div._180GG7_7yx > div.cv6id6JEkg > ul > li:nth-child(${
+          i + 1
+        }) > div > div > div > div._1XNnRviOK8 > div > div._1YShY6EQ56 > div._1rZLm75kLm > div._37TlmH3OaI > div._14FigHP3K8 > dl > div:nth-child(3)`;
+      }
+
+      const usage_2 = await getTextFromSelector(page, selector_usage_2);
+      const usage_3 = await getTextFromSelector(page, selector_usage_3);
+
       const usage_review = await getTextFromSelector(
         page,
         selector_usage_review
@@ -104,19 +135,27 @@ const getReviews = async (page, st_date, end_date) => {
         continue;
       }
 
-      const tester = review.includes("한달사용기") ? "한달사용기" : "";
-      review = review.replace("한달사용기", "");
+      const tester = () => {
+        if (review.includes("한달사용기")) return "한달사용기";
+        else if (review.includes("재구매")) return "재구매";
+        return "";
+      };
+
+      review = review.replace(tester(), "");
 
       reviews.push({
         id: reviewer,
         date: date,
         score: score,
-        skinType: revised_usage_review[0],
-        troubleCare: revised_usage_review[1],
-        skinStimulus: revised_usage_review[2],
-        moisture: revised_usage_review[3],
-        tester,
+        skinType: usage_1.replace("피부 타입", ""),
+        skinStimulus: usage_3.includes("피부자극")
+          ? usage_3.replace("피부자극")
+          : "",
+        tester: tester(),
         review: review,
+        etc_1: usage_2,
+        etc_2: usage_3 && usage_3.includes("피부자극") ? usage_4 : usage_3,
+        etc_3: usage_3 && usage_3.includes("피부자극") ? "" : usage_4,
       });
 
       // console.log(

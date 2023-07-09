@@ -41,6 +41,25 @@ const lateDateCheckerThanEndDate = (date, end_date) => {
   else return false;
 };
 
+const usageDivider = (usageList) => {
+  const revisedUsageList = usageList.map((usage) => {
+    usage.trim();
+    return usage.replace(/\s+/g, " ");
+  });
+  let etcList = [];
+  let skinStimulus = "";
+
+  for (let i = 0; i < revisedUsageList.length; i += 1) {
+    if (revisedUsageList[i].includes("자극도")) {
+      skinStimulus = revisedUsageList[i].replace("자극도", "");
+      etcList = [...revisedUsageList];
+      etcList.splice(i);
+    }
+  }
+
+  return { etcList, skinStimulus };
+};
+
 const getReviews = async (page, st_date, end_date) => {
   let isContinue = true;
   let reviews = [];
@@ -50,9 +69,9 @@ const getReviews = async (page, st_date, end_date) => {
     const selector_date = `#btfTab > ul.tab-contents > li.product-review.tab-contents__content > div > div.sdp-review__article.js_reviewArticleContainer > section.js_reviewArticleListContainer > article:nth-child(${i}) > div.sdp-review__article__list__info > div.sdp-review__article__list__info__product-info > div.sdp-review__article__list__info__product-info__reg-date`;
     const selector_reviewer = `#btfTab > ul.tab-contents > li.product-review.tab-contents__content > div > div.sdp-review__article.js_reviewArticleContainer > section.js_reviewArticleListContainer > article:nth-child(${i}) > div.sdp-review__article__list__info > div.sdp-review__article__list__info__user > span`;
     const selector_seller = `#btfTab > ul.tab-contents > li.product-review.tab-contents__content > div > div.sdp-review__article.js_reviewArticleContainer > section.js_reviewArticleListContainer > article:nth-child(${i}) > div.sdp-review__article__list__info > div.sdp-review__article__list__info__product-info__seller_name`;
-    const selector_smell_satisfaction = `#btfTab > ul.tab-contents > li.product-review.tab-contents__content > div > div.sdp-review__article.js_reviewArticleContainer > section.js_reviewArticleListContainer > article:nth-child(${i}) > div.sdp-review__article__list__survey > div:nth-child(1) > span.sdp-review__article__list__survey__row__answer`;
-    const selector_skin_stimulation = `#btfTab > ul.tab-contents > li.product-review.tab-contents__content > div > div.sdp-review__article.js_reviewArticleContainer > section.js_reviewArticleListContainer > article:nth-child(${i}) > div.sdp-review__article__list__survey > div:nth-child(2) > span.sdp-review__article__list__survey__row__answer`;
-    const selector_skin_coverage = `#btfTab > ul.tab-contents > li.product-review.tab-contents__content > div > div.sdp-review__article.js_reviewArticleContainer > section.js_reviewArticleListContainer > article:nth-child(${i}) > div.sdp-review__article__list__survey > div:nth-child(3) > span.sdp-review__article__list__survey__row__answer`;
+    const selector_etc_1 = `#btfTab > ul.tab-contents > li.product-review.tab-contents__content > div > div.sdp-review__article.js_reviewArticleContainer > section.js_reviewArticleListContainer > article:nth-child(${i}) > div.sdp-review__article__list__survey > div:nth-child(1)`;
+    const selector_etc_2 = `#btfTab > ul.tab-contents > li.product-review.tab-contents__content > div > div.sdp-review__article.js_reviewArticleContainer > section.js_reviewArticleListContainer > article:nth-child(${i}) > div.sdp-review__article__list__survey > div:nth-child(2)`;
+    const selector_etc_3 = `#btfTab > ul.tab-contents > li.product-review.tab-contents__content > div > div.sdp-review__article.js_reviewArticleContainer > section.js_reviewArticleListContainer > article:nth-child(${i}) > div.sdp-review__article__list__survey > div:nth-child(3)`;
     const selector_review = `#btfTab > ul.tab-contents > li.product-review.tab-contents__content > div > div.sdp-review__article.js_reviewArticleContainer > section.js_reviewArticleListContainer > article:nth-child(${i}) > div.sdp-review__article__list__review.js_reviewArticleContentContainer > div`;
 
     try {
@@ -60,18 +79,9 @@ const getReviews = async (page, st_date, end_date) => {
       const date = await getTextFromSelector(page, selector_date);
       const reviewer = await getTextFromSelector(page, selector_reviewer);
       const seller = await getTextFromSelector(page, selector_seller);
-      const smellSatisfaction = await getTextFromSelector(
-        page,
-        selector_smell_satisfaction
-      );
-      const skinStimulus = await getTextFromSelector(
-        page,
-        selector_skin_stimulation
-      );
-      const skinCoverage = await getTextFromSelector(
-        page,
-        selector_skin_coverage
-      );
+      const etc_1 = await getTextFromSelector(page, selector_etc_1);
+      const etc_2 = await getTextFromSelector(page, selector_etc_2);
+      const etc_3 = await getTextFromSelector(page, selector_etc_3);
       const review = await getTextFromSelector(page, selector_review);
 
       if (!score) {
@@ -86,26 +96,29 @@ const getReviews = async (page, st_date, end_date) => {
         continue;
       }
 
+      const { etcList, skinStimulus } = usageDivider([etc_1, etc_2, etc_3]);
+
       if (seller.includes("쿠팡(주)"))
         reviews.push({
           id: reviewer,
           date: date,
           score: score,
-          smellSatisfaction: smellSatisfaction,
           skinStimulus: skinStimulus,
-          skinCoverage: skinCoverage,
           review: review,
+          etc_1: etcList[0],
+          etc_2: etcList[1],
+          etc_3: etcList.length > 2 ? etcList[2] : "",
         });
-      console.log(
-        `${i - 2}번째 리뷰 : `,
-        score,
-        date,
-        reviewer,
-        smellSatisfaction,
-        skinStimulus,
-        skinCoverage,
-        review
-      );
+      // console.log(
+      //   `${i - 2}번째 리뷰 : `,
+      //   score,
+      //   date,
+      //   reviewer,
+      //   etc_1,
+      //   etc_2,
+      //   etc_3,
+      //   review
+      // );
     } catch {
       isContinue = false;
       break;
