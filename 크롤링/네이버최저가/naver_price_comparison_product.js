@@ -81,7 +81,7 @@ const NaverPriceComparisonProductCrawling = async () => {
     let product_list = [];
 
     while (true) {
-      const { name, url } = await getInfo(page, product_count);
+      const { name, url } = await getInfo(page, product_count + 1);
 
       if (!name) break;
 
