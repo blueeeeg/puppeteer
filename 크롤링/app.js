@@ -7,6 +7,10 @@ app.get("", (req, res) => {
   res.sendFile(__dirname + "/crawling.html");
 });
 
+app.get("/all", (req, res) => {
+  res.sendFile(__dirname + "/통합/all.html");
+});
+
 app.get("/public", (req, res) => {
   res.sendFile(__dirname + "/공식몰/public.html");
 });
@@ -34,14 +38,37 @@ app.use(express.static(__dirname));
 app.use(express.urlencoded({ extended: false }));
 
 // 전체 상품 크롤링
+app.post("/listAll", async (req, res) => {
+  const publicCrawler = require("./공식몰/public_product.js");
+  await publicCrawler.PublicProductCrawling();
+
+  const naverCrawler = require("./네이버/naver_product.js");
+  await naverCrawler.NaverProductCrawling();
+
+  const oliveyoungCrawler = require("./올리브영/oliveyoung_product.js");
+  await oliveyoungCrawler.OliveyoungProductCrawling();
+
+  const coopangCrawler = require("./쿠팡/coopang_product.js");
+  await coopangCrawler.CoopangProductCrawling();
+
+  res.send({ message: "finish to update" });
+});
+
 app.post("/crawlingAll", async (req, res) => {
+  const params = req.body;
+
   // 공식몰 상품 갱신 -> 불러오기 -> 크롤링
   const publicListCrawler = require("./공식몰/excel_public_product.js");
   const publicList = await publicListCrawler.getPublicProductList();
 
   const publicCrawler = require("./공식몰/public.js");
   for (let i = 0; i < publicList.length; i += 1) {
-    await publicCrawler.PublicCrawler(publicList[i].url, publicList[i].name);
+    await publicCrawler.PublicCrawler(
+      publicList[i].url,
+      publicList[i].name,
+      params.st_date,
+      params.end_date
+    );
   }
 
   // 네이버 상품 갱신 -> 불러오기 -> 크롤링
@@ -50,7 +77,12 @@ app.post("/crawlingAll", async (req, res) => {
 
   const naverCrawler = require("./네이버/naver.js");
   for (let i = 0; i < naverList.length; i += 1) {
-    await naverCrawler.NaverCrawling(naverList[i].url, naverList[i].name);
+    await naverCrawler.NaverCrawling(
+      naverList[i].url,
+      naverList[i].name,
+      params.st_date,
+      params.end_date
+    );
   }
 
   // 올리브영 상품 갱신 -> 불러오기 -> 크롤링
@@ -61,7 +93,9 @@ app.post("/crawlingAll", async (req, res) => {
   for (let i = 0; i < oliveyoungList.length; i += 1) {
     await oliveyoungCrawler.OliveyoungCrawling(
       oliveyoungList[i].url,
-      oliveyoungList[i].name
+      oliveyoungList[i].name,
+      params.st_date,
+      params.end_date
     );
   }
 
@@ -73,7 +107,9 @@ app.post("/crawlingAll", async (req, res) => {
   for (let i = 0; i < coopangList.length; i += 1) {
     await coopangCrawler.CoopangCrawler(
       coopangList[i].url,
-      coopangList[i].name
+      coopangList[i].name,
+      params.st_date,
+      params.end_date
     );
   }
 

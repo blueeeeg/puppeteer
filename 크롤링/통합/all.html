@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="./통합/all.css" />
+    <title>리뷰 크롤링</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="product_button" onclick="_renewPublicProduct()">
+        상품 갱신하기
+      </div>
+      <script>
+        const _renewPublicProduct = () => {
+          fetch("/listAll", {
+            method: "POST",
+          })
+            .then(async (response) => console.log("response : ", response))
+            .then((data) => console.log("data : ", data))
+            .catch((error) => console.error("error : ", error));
+        };
+      </script>
+    </div>
+    <form action="/crawlingAll" method="POST">
+      <input id="select_item_url" name="url" style="display: none" />
+      <input id="select_item_name" name="name" style="display: none" />
+      <div class="input_wrapper">
+        <input
+          type="text"
+          class="input"
+          name="st_date"
+          placeholder="시작일 yymmdd"
+        />
+        <input
+          type="text"
+          class="input"
+          name="end_date"
+          placeholder="종료일 yymmdd"
+        />
+        <input
+          id="submit"
+          type="submit"
+          class="crawling_button"
+          value="크롤링 시작"
+        />
+      </div>
+    </form>
+    <div id="product_list" class="product_list"></div>
+  </body>
+</html>
