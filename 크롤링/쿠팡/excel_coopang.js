@@ -13,7 +13,7 @@ const fillData = (worksheet, reviewData, name) => {
     worksheet.addRow([
       "쿠팡",
       name,
-      valueChecker(reviewData[i].date),
+      valueChecker(reviewData[i].date.slice(2)),
       valueChecker(reviewData[i].score),
       valueChecker(reviewData[i].review),
       valueChecker(reviewData[i].id),
