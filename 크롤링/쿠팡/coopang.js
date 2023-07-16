@@ -135,37 +135,30 @@ const CoopangCrawler = async (url, name, st_date, end_date) => {
       args: ["--no-sandbox"],
     });
     const page = await browser.newPage();
+    wait(1);
 
     // 해당 url로 이동
     await page.goto(url);
+    wait(1);
 
     // 상품평 버튼 클릭
-    wait(1);
     await page.evaluate(() => {
       window.scrollTo(0, 1000);
     });
+    wait(1);
 
     const selector_review_button = "#btfTab > ul.tab-titles > li:nth-child(2)";
     await page.waitForSelector(selector_review_button);
     await page.click(selector_review_button);
+    wait(1);
 
     // 최신순 버튼 클릭
     const selector_order_recent =
       "#btfTab > ul.tab-contents > li.product-review.tab-contents__content > div > div.sdp-review__article.js_reviewArticleContainer > section.sdp-review__article__order.js_reviewArticleOrderContainer.sdp-review__article__order--active > div.sdp-review__article__order__sort > button.sdp-review__article__order__sort__newest-btn.js_reviewArticleNewListBtn.js_reviewArticleSortBtn";
     await page.waitForSelector(selector_order_recent);
     await page.click(selector_order_recent);
-
-    // 리뷰 개수 확인
-    const selector_review_count =
-      "#btfTab > ul.tab-contents > li.product-review.tab-contents__content > div > div.sdp-review__average.js_reviewAverageContainer > section.sdp-review__average__total-star > div.sdp-review__average__total-star__info > div.sdp-review__average__total-star__info-count";
-    await page.waitForSelector(selector_review_count);
-    const review_count = await page.$eval(
-      selector_review_count,
-      (element) => element.textContent
-    );
-    console.log("review count : ", review_count);
-
     wait(1);
+
     let pageNbr = 3;
     let filledReviews = [];
     while (true) {
@@ -189,11 +182,9 @@ const CoopangCrawler = async (url, name, st_date, end_date) => {
 
           wait(0.5);
         } catch (err) {
-          console.log(1);
           break;
         }
       } else {
-        console.log(2);
         break;
       }
     }

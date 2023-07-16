@@ -1,6 +1,14 @@
 const puppeteer = require("puppeteer");
 const PublicExcel = require("./excel_public");
 
+const wait = async (sec) => {
+  let start = Date.now(),
+    now = start;
+  while (now - start < sec * 1000) {
+    now = Date.now();
+  }
+};
+
 const getTextFromSelector = async (frame, selector) => {
   try {
     await frame.waitForSelector(selector, { timeout: 1000 });
@@ -113,6 +121,7 @@ const PublicCrawler = async (url, name, st_date, end_date) => {
       args: ["--disable-features=site-per-process"],
     });
     const page = await browser.newPage();
+    wait(1);
 
     // 리뷰 크롤링
     let pageNbr = 1;
@@ -122,15 +131,16 @@ const PublicCrawler = async (url, name, st_date, end_date) => {
 
       // 해당 url로 이동
       await page.goto(revisedUrl);
+      wait(1);
 
       // iframe 안으로 들어감
       const iframe_selector = "#crema-product-reviews-1";
       const frame_handle = await page.$(iframe_selector);
       const frame = await frame_handle.contentFrame();
+      wait(1);
 
       const selector_review_container =
         ".review_list_v2.review_list_v2--collapsed.renewed_review.js-review-container";
-
       const id_list = [];
       const container_list = await frame.$$(selector_review_container);
 

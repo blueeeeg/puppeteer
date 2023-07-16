@@ -132,19 +132,23 @@ const OliveyoungCrawling = async (url, name, st_date, end_date) => {
       args: ["--no-sandbox"],
     });
     const page = await browser.newPage();
+    wait(1);
 
     // 해당 url로 이동
     await page.goto(url);
+    wait(1);
 
     // 리뷰 버튼 클릭
     const selector_review_button = "#reviewInfo";
     await page.waitForSelector(selector_review_button);
     await page.click(selector_review_button);
+    wait(1);
 
     // 최신순 버튼 클릭
     const selector_order_recent = "#gdasSort > li:nth-child(3)";
     await page.waitForSelector(selector_order_recent);
     await page.click(selector_order_recent);
+    wait(1);
 
     let pageNbr = 1;
     let currentPageNbr = 1;
