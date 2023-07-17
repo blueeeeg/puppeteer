@@ -68,25 +68,31 @@
       </script>
     </div>
     <div class="input_wrapper">
-      <form action="/naverPriceComparisonCrawling" method="POST">
+      <form
+        action="/naverPriceComparisonCrawling"
+        method="POST"
+        class="input_wrapper_form"
+      >
         <input id="select_item_url" name="url" style="display: none" />
         <input id="select_item_name" name="name" style="display: none" />
         <div class="select_item_wrapper">
           <span>선택한 상품 :</span>
           <span id="select_item"></span>
         </div>
-        <input
-          type="text"
-          class="input"
-          name="st_date"
-          placeholder="시작일 yymmdd"
-        />
-        <input
-          type="text"
-          class="input"
-          name="end_date"
-          placeholder="종료일 yymmdd"
-        />
+        <div>
+          <span>최저가 조회 날짜 : 현재기준</span>
+          <span id="current_date"></div>
+          <script>
+            const date = new Date();
+
+            const days = ['일', '월', '화', '수', '목', '금', '토'];
+            let now;
+            if (date.getHours() < 10) now = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()} (${days[date.getDay()]}) 0${date.getHours()}시`;
+            else now = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()} (${days[date.getDay()]}) ${date.getHours()}시`;
+
+            document.getElementById("current_date").innerHTML = now;
+          </script>
+        </div>
         <input
           id="submit"
           type="submit"
