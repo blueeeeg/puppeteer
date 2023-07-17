@@ -188,12 +188,6 @@ const NaverCrawling = async (url, name, st_date, end_date) => {
     await page.goto(url);
     wait(1);
 
-    // 리뷰 버튼 보이는 위치로 이동
-    await page.evaluate(() => {
-      window.scrollTo(0, 2000);
-    });
-    wait(1);
-
     const selector_review_button =
       "#content > div > div.z7cS6-TO7X > div._27jmWaPaKy > ul > li:nth-child(2) > a";
     await page.waitForSelector(selector_review_button);
@@ -202,6 +196,7 @@ const NaverCrawling = async (url, name, st_date, end_date) => {
 
     const selector_order_recent =
       "#REVIEW > div > div._180GG7_7yx > div._2PqWvCMC3e > div._3Tobq9fjVh > ul > li:nth-child(2) > a";
+    await page.waitForSelector(selector_order_recent);
     await page.click(selector_order_recent);
     wait(1);
 
