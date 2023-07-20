@@ -88,7 +88,7 @@
             const days = ['일', '월', '화', '수', '목', '금', '토'];
             let now;
             if (date.getHours() < 10) now = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()} (${days[date.getDay()]}) 0${date.getHours()}시`;
-            else now = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()} (${days[date.getDay()]}) ${date.getHours()}시`;
+            else now = `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()} (${days[date.getDay()]}) ${date.getHours()}시`;
 
             document.getElementById("current_date").innerHTML = now;
           </script>
